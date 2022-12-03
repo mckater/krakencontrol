@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Station № {{ current_user.citi }}, {{ citi_str }}</h1>
+
+
+    <div class="row">
+        <div class="col-8">
+
+            <h2>Actual data</h2>
+            <table class="table table-inverse">
+                <thead>
+                <tr>
+                    <th>childbearing</th>
+                    <th>quantity</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+
+
+                <tr>
+                    <th scope="row"> males</th>
+                    <td>{{ counts[0] }} things</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> females</th>
+                    <td>{{ counts[1] }} things</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-inverse">
+                <thead class="thead-light">
+                <tr>
+                    <th>#</th>
+                    <th>id</th>
+                    <th>Sex</th>
+                    <th>is_childbearing</th>
+                </tr>
+                </thead>
+                <tbody>
+
+
+                {% for u in query %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ u[1] }}</td>
+                    <td>{{ u[2] }}</td>
+                    <td>{{ u[4] }}</td>
+
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+        <br>
+        <div class="col-4">
+            <h3>{{ weather_text }}</h3>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
