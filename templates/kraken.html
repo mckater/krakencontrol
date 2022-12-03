@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <!--    {% if current_user.name == 'SuperAdmin' %}-->
+    <!--&lt;!&ndash;            <a href="/super_admin" class="alert-link"></a>&ndash;&gt;-->
+    <!--            <a href="/super_admin" class="btn btn-primary">Check global</a>-->
+    <!--            {% endif %}-->
+    <h1>Station № {{ current_user.citi }}, {{ citi_str }}</h1>
+
+
+    <div class="row">
+        <div class="col-8">
+            <h2>Release the kraken!</h2>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.sex.label }}<br>
+                    {{ form.sex(class="form-control") }}<br>
+                    {{ form.citi.label }}<br>
+                    {{ form.citi(class="form-control") }}<br>
+                    {{ form.age.label }}<br>
+                    {{ form.age(class="form-control") }}<br>
+
+
+                <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+
+        </div>
+        <br>
+        <div class="col-4">
+            <h3>{{ weather_text }}</h3>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

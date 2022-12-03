@@ -75,6 +75,24 @@ def start_data_in_bd():
     session.close()
 
 
+def new_kraken_in_bd(kraken):
+    session = create_session()
+    kraken.is_childbearing = True if 2 <= kraken.age <= 8 else False
+    session.add(kraken)
+    print(kraken)
+    session.commit()
+    session.close()
+
+
+def kraken_del_from_bd(kraken):
+    session = create_session()
+
+    session.delete(kraken)
+    print(kraken)
+    session.commit()
+    session.close()
+
+
 def query_by_all():
     from data.krakens import Kraken
     session = create_session()
@@ -99,10 +117,6 @@ def query_citi():
     from data.cities import Citi
     session = create_session()
     query = session.query(Citi).all()
-    # result = dict()
-    # for c in query:
-    #     qqq = (c.citi_id, c.citi_name)
-    #     result.update(qqq)
     return {str(c.citi_id): c.citi_name.replace(',', ', ') for c in query}
 
 

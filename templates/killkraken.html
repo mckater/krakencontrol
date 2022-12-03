@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <!--    {% if current_user.name == 'SuperAdmin' %}-->
+    <!--&lt;!&ndash;            <a href="/super_admin" class="alert-link"></a>&ndash;&gt;-->
+    <!--            <a href="/super_admin" class="btn btn-primary">Check global</a>-->
+    <!--            {% endif %}-->
+    <h1>Station № {{ current_user.citi }}, {{ citi_str }}</h1>
+
+
+    <div class="row">
+        <div class="col-8">
+
+            <h2>The kraken is dead.</h2>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.id.label }}<br>
+                    {{ form.id(class="form-control") }}<br>
+
+                <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+            </form>
+        </div>
+        <br>
+        <div class="col-4">
+            <h3>{{ weather_text }}</h3>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

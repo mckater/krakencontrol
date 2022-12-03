@@ -2,11 +2,12 @@ from flask import Flask, redirect, render_template, url_for
 
 from weather import weather_by_city
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField
 from wtforms.validators import DataRequired
 from flask_login import LoginManager, login_user, login_required, logout_user
-from data.db_session import query_by_citi, create_session, query_what_citi, query_by_all, query_citi
+from data.db_session import *
 from data.users import User
+from data.krakens import Kraken
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -26,6 +27,45 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Login')
+
+
+class NewKrakenForm(FlaskForm):
+    # id = StringField('id', validators=[DataRequired()])
+    sex = SelectField('sex', choices=('male', 'female'), validators=[DataRequired()])
+    age = IntegerField('age', validators=[DataRequired()])
+    citi = SelectField('citi', choices=('1. London,UK', '2. Istanbul,Turkey', '3. Vladivostok,Russia',
+                '4. Havana,Cuba', '5. Norilsk,Russia', '6. Moscow,Russia;'), validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+
+class DeadKrakenForm(FlaskForm):
+    id = IntegerField('id', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+
+@app.route('/kraken', methods=['GET', 'POST'])
+def kraken():
+    form = NewKrakenForm()
+    if form.validate_on_submit():
+
+        kraken = Kraken(
+            sex=form.sex.data[0],
+            age=form.age.data,
+            citi=str(form.citi.data)[0]
+        )
+        new_kraken_in_bd(kraken)
+        return redirect('/index')
+    return render_template('kraken.html', form=form)
+
+
+@app.route('/killkraken', methods=['GET', 'POST'])
+def killkraken():
+    form2 = DeadKrakenForm()
+    if form2.validate_on_submit():
+        kraken = Kraken(id=form2.id.data)
+        kraken_del_from_bd(kraken)
+        return redirect('/index')
+    return render_template('killkraken.html', form=form2)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -83,67 +123,6 @@ def index():
 
     q = query_by_citi(what_citi)
     return render_template('index.html', query=q[0], counts=q[1], citi_str=citi_str, page_title=page_title, weather_text=weather_txt)
-
-
-@app.route('/load_photo', methods=['POST', 'GET'])
-def load_photo():
-    file = url_for('static', filename='img/photo.jpg')
-    if request.method == 'GET':
-        return f'''<!doctype html>
-                        <html lang="en">
-                          <head>
-                            <meta charset="utf-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-                            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
-                            <title>Отбор астронавтов</title>
-                          </head>
-                          <body>
-                            <h1 align="center">Загрузка фотографии</h1>
-                            <h3 align="center">для участия в миссии</h3>
-                            <div>
-                                <form class="login_form" method="post" enctype="multipart/form-data">
-                                   <div class="form-group">
-                                        <label for="photo">Приложите фотографию</label>
-                                        <input type="file" class="form-control-file" id="photo" name="file">
-                                    </div>
-                                    <img src="{file}" alt="Фото">
-                                    <br>
-                                    <button type="submit" class="btn btn-primary">Отправить</button>
-                                </form>
-                            </div>
-                          </body>
-                        </html>'''
-    elif request.method == 'POST':
-        f = request.files['file']
-        with open(f'static/img/{f.filename}', 'wb') as file:
-            file.write(f.read())
-        file = url_for('static', filename=f'img/{f.filename}')
-        return f'''<!doctype html>
-                        <html lang="en">
-                          <head>
-                            <meta charset="utf-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-                            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='css/style.css')}" />
-                            <title>Отбор астронавтов</title>
-                          </head>
-                          <body>
-                            <h1 align="center">Загрузка фотографии</h1>
-                            <h3 align="center">для участия в миссии</h3>
-                            <div>
-                                <form class="login_form" method="post" enctype="multipart/form-data">
-                                   <div class="form-group">
-                                        <label for="photo">Приложите фотографию</label>
-                                        <input type="file" class="form-control-file" id="photo" name="file">
-                                    </div>
-                                    <img src="{file}" alt="Фото">
-                                    <br>
-                                    <button type="submit" class="btn btn-primary">Отправить</button>
-                                </form>
-                            </div>
-                          </body>
-                        </html>'''
 
 
 def main():
