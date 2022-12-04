@@ -4,6 +4,7 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session
 import sqlalchemy.ext.declarative as dec
 
+
 SqlAlchemyBase = dec.declarative_base()
 
 __factory = None
@@ -84,12 +85,23 @@ def new_kraken_in_bd(kraken):
     session.close()
 
 
-def kraken_del_from_bd(kraken):
+def kraken_del_from_bd(id):
+    from data.krakens import Kraken
     session = create_session()
+    try:
+        kraken = session.query(Kraken).filter_by(id=id).one()
+        session.delete(kraken)
+        session.commit()
+        print('Kraken id {id} is deleted from the database')
+    except sa.exc.NoResultFound:  # sqlalchemy.exc.NoResultFound
+        print('Kraken id {id} absent in the database')
 
-    session.delete(kraken)
-    print(kraken)
-    session.commit()
+    # if kraken is not None:
+    #     session.delete(kraken)
+    #     session.commit()
+    #     print('Kraken id {id} is deleted from the database')
+    # else:  # sqlalchemy.exc.NoResultFound
+    #     print('Kraken id {id} absent in the database')
     session.close()
 
 
@@ -106,7 +118,7 @@ def query_by_all():
 def query_by_citi(what_citi):
     from data.krakens import Kraken
     session = create_session()
-    query = session.query(Kraken).filter(Kraken.citi == what_citi)
+    query = session.query(Kraken).filter(Kraken.citi == what_citi).order_by(Kraken.age)
     li = [str(x).split() for x in query]
     male_count = len([male for male in li if male[-2] == 'True' and male[2] == 'm'])
     female_count = len([female for female in li if female[-2] == 'True' and female[2] == 'f'])

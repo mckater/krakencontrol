@@ -30,11 +30,11 @@ class LoginForm(FlaskForm):
 
 
 class NewKrakenForm(FlaskForm):
-    # id = StringField('id', validators=[DataRequired()])
     sex = SelectField('sex', choices=('male', 'female'), validators=[DataRequired()])
     age = IntegerField('age', validators=[DataRequired()])
     citi = SelectField('citi', choices=('1. London,UK', '2. Istanbul,Turkey', '3. Vladivostok,Russia',
                 '4. Havana,Cuba', '5. Norilsk,Russia', '6. Moscow,Russia;'), validators=[DataRequired()])
+    # доработать! города должны подтягиваться из базы
     submit = SubmitField('Save')
 
 
@@ -44,27 +44,25 @@ class DeadKrakenForm(FlaskForm):
 
 
 @app.route('/kraken', methods=['GET', 'POST'])
-def kraken():
+def kraken():  # внести в веб-форму данные о неучтённом / новорожденном.
     form = NewKrakenForm()
     if form.validate_on_submit():
-
         kraken = Kraken(
             sex=form.sex.data[0],
             age=form.age.data,
             citi=str(form.citi.data)[0]
         )
-        new_kraken_in_bd(kraken)
+        new_kraken_in_bd(kraken)  # вносим в БД
         return redirect('/index')
     return render_template('kraken.html', form=form)
 
 
 @app.route('/killkraken', methods=['GET', 'POST'])
-def killkraken():
+def killkraken():  # весь кракен не нужен, передаём на удаление только его id
     form2 = DeadKrakenForm()
     if form2.validate_on_submit():
-        kraken = Kraken(id=form2.id.data)
-        kraken_del_from_bd(kraken)
-        return redirect('/index')
+        kraken_del_from_bd(form2.id.data)  # стираем из БД
+        return redirect('/login')
     return render_template('killkraken.html', form=form2)
 
 
@@ -126,7 +124,7 @@ def index():
 
 
 def main():
-    app.run(port=8080, host='127.0.0.1', use_reloader=False, debug=True)
+    app.run(port=8080, host='127.0.0.1')
 
 
 # if __name__ == '__main__':

@@ -4,9 +4,9 @@
 
 <div class="container">
     {% if current_user.name == 'SuperAdmin' %}
-<!--            <a href="/super_admin" class="alert-link"></a>-->
-            <a href="/super_admin" class="btn btn-primary">Check global</a>
-            {% endif %}
+    <!--            <a href="/super_admin" class="alert-link"></a>-->
+    <a href="/super_admin" class="btn btn-danger">Check global analysis</a>
+    {% endif %}
     <h1>Station № {{ current_user.citi }}, {{ citi_str }}</h1>
 
 
@@ -28,18 +28,28 @@
                 <tr>
                     <th scope="row"> males</th>
                     <td>{{ counts[0] }} things</td>
-                    <td>{% for x in range(counts[0]) %}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gender-male" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
-</svg>{% endfor %}</td>
+                    <td>{% for x in range(counts[0]) %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-gender-male" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
+                        </svg>
+                        {% endfor %}
+                    </td>
                     <td></td>
                 </tr>
 
                 <tr>
                     <th scope="row"> females</th>
                     <td>{{ counts[1] }} things</td>
-                    <td>{% for x in range(counts[1]) %}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gender-female" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5z"/>
-</svg>{% endfor %}</td>
+                    <td>{% for x in range(counts[1]) %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-gender-female" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5z"/>
+                        </svg>
+                        {% endfor %}
+                    </td>
                     <td></td>
                 </tr>
                 </tbody>
@@ -49,6 +59,7 @@
                 <tr>
                     <th>#</th>
                     <th>id</th>
+                    <th>Age</th>
                     <th>Sex</th>
                     <th>is_childbearing</th>
                 </tr>
@@ -60,13 +71,33 @@
                 <tr>
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ u[1] }}</td>
-                    <td>{{ u[2] }}</td>
-                    <td>{{ u[4] }}</td>
+                    <td>{{ u[3] }}</td>
+                    {% if u[2] == 'm' %}
+                    <td>male</td>
+                    {% else %}
+                    <td>female</td>
+                    {% endif %}
+                    {% if u[4] == 'True' %}
+                    <td>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-check-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                        </svg>
+                    </td>
+                    {% endif %}
+                    <td></td>
 
                 </tr>
                 {% endfor %}
 
             </table>
+            <div>
+                <a href="/kraken" class="alert-link">New kraken</a>
+            </div>
+            <div>
+                <a href="/killkraken" class="alert-link">Delete kraken</a>
+            </div>
         </div>
         <br>
         <div class="col-4">

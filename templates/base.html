@@ -16,12 +16,12 @@
     <nav class="navbar navbar-light bg-light">
         <h1>Ecological project</h1>
         <a class="navbar-brand" href="/login">Kraken control</a>
-        <a href="/kraken" class="alert-link">New kraken</a>
+
         {% if current_user.is_authenticated %}
             {% if current_user.name == 'SuperAdmin' %}
             <a class="navbar-brand"><h5>administrator: {{ current_user.name }}</h5> by area: All</a><a href="/super_admin" class="alert-link">Check global</a>
             {% else %}
-            <a class="navbar-brand"><h5>administrator: {{ current_user.name }}</h5> by area: {{ citi_str }}</a>
+            <a class="navbar-brand"><h5>administrator: {{ current_user.name }}</h5> {{ citi_str }}</a>
             {% endif %}
         <a class="btn btn-primary " href="/logout">logout</a>
         {% else %}
@@ -31,7 +31,7 @@
 
         {% endif %}
     </nav>
-    <h4>Right here, right now</h4>
+    <h4>Save the world</h4>
 </header>
 
 <!-- Begin page content -->
@@ -66,7 +66,7 @@
                 <ul class="list-unstyled">
                     <li class="mb-2"><a href="/login">Main</a></li>
                     <li class="mb-2"><a href="/kraken">New kraken</a></li>
-                    <li class="mb-2"><a href="/killkraken">Kill kraken</a></li>
+                    <li class="mb-2"><a href="/killkraken">Delete kraken</a></li>
                     <li class="mb-2"><a href="/index">Analysis</a></li>
                 </ul>
             </div>
