@@ -19,7 +19,8 @@
 
         {% if current_user.is_authenticated %}
             {% if current_user.name == 'SuperAdmin' %}
-            <a class="navbar-brand"><h5>administrator: {{ current_user.name }}</h5> by area: All</a><a href="/super_admin" class="alert-link">Check global</a>
+            <a class="navbar-brand"><h5>administrator: {{ current_user.name }}</h5> by area: All</a>
+        <a href="/super_admin" class="alert-link">Check global</a>
             {% else %}
             <a class="navbar-brand"><h5>administrator: {{ current_user.name }}</h5> {{ citi_str }}</a>
             {% endif %}
@@ -64,17 +65,19 @@
             <div class="col-6 col-lg-2 offset-lg-1 mb-3">
                 <h5>Links</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/login">Main</a></li>
-                    <li class="mb-2"><a href="/kraken">New kraken</a></li>
-                    <li class="mb-2"><a href="/killkraken">Delete kraken</a></li>
-                    <li class="mb-2"><a href="/index">Analysis</a></li>
+                    <li class="nav-link"><a href="/login">Main</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-link"><a href="/kraken">New kraken</a></li>
+                    <li class="nav-link"><a href="/killkraken">Delete kraken</a></li>
+                    <li class="nav-link"><a href="/index">Analysis</a></li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="col-6 col-lg-2 mb-3">
                 <h5>Guide</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#">Begining</a></li>
-                    <li class="mb-2"><a href="#">How to</a></li>
+                    <li class="nav-link disabled"><a href="#">Begining</a></li>
+                    <li class="nav-link disabled"><a href="#">How to</a></li>
                 </ul>
             </div>
 

@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template
 
 from weather import weather_by_city
 from flask_wtf import FlaskForm
@@ -34,13 +34,13 @@ class NewKrakenForm(FlaskForm):
     age = IntegerField('age', validators=[DataRequired()])
     citi = SelectField('citi', choices=('1. London,UK', '2. Istanbul,Turkey', '3. Vladivostok,Russia',
                 '4. Havana,Cuba', '5. Norilsk,Russia', '6. Moscow,Russia;'), validators=[DataRequired()])
-    # доработать! города должны подтягиваться из базы
+    # доработать: города должны подтягиваться из базы
     submit = SubmitField('Save')
 
 
 class DeadKrakenForm(FlaskForm):
     id = IntegerField('id', validators=[DataRequired()])
-    submit = SubmitField('Save')
+    submit = SubmitField('Delede')
 
 
 @app.route('/kraken', methods=['GET', 'POST'])
@@ -58,7 +58,7 @@ def kraken():  # внести в веб-форму данные о неучтё�
 
 
 @app.route('/killkraken', methods=['GET', 'POST'])
-def killkraken():  # весь кракен не нужен, передаём на удаление только его id
+def kill_kraken():  # весь кракен не нужен, передаём на удаление только его id
     form2 = DeadKrakenForm()
     if form2.validate_on_submit():
         kraken_del_from_bd(form2.id.data)  # стираем из БД
@@ -70,8 +70,6 @@ def killkraken():  # весь кракен не нужен, передаём н�
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        # return redirect('/index')
-        # '''
         db_sess = create_session()
         user = db_sess.query(User).filter(User.name == form.username.data).first()
         if user and user.check_password(form.password.data):
@@ -85,7 +83,6 @@ def login():
         return render_template('login.html',
                                message="Incorrect login or password",
                                form=form)
-    # '''
     return render_template('login.html', title='Get access', form=form)
 
 
@@ -113,14 +110,14 @@ def super_admin():
 def index():
     page_title = 'Kraken control'
     citi_str = str(query_what_citi(what_citi))
-    weather = weather_by_city(citi_str)  # по_умолч.='Moscow,Russia', можно добавить другой.
+    weather = weather_by_city(citi_str)  # API
     if weather:
         weather_txt = "{}: {}, {}. Feel's like {}".format(citi_str.replace(',', ', '), *weather)
     else:
         weather_txt = 'The weather server is temporarily unavailable'  # Сервер погоды временно недоступен
-
     q = query_by_citi(what_citi)
-    return render_template('index.html', query=q[0], counts=q[1], citi_str=citi_str, page_title=page_title, weather_text=weather_txt)
+    return render_template('index.html', query=q[0], counts=q[1], citi_str=citi_str,
+                           page_title=page_title, weather_text=weather_txt)
 
 
 def main():

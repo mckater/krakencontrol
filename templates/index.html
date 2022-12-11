@@ -5,7 +5,8 @@
 <div class="container">
     {% if current_user.name == 'SuperAdmin' %}
     <!--            <a href="/super_admin" class="alert-link"></a>-->
-    <a href="/super_admin" class="btn btn-danger">Check global analysis</a>
+    <a href="/super_admin" class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="Analysis for all regions">
+    Check global analysis</a>
     {% endif %}
     <h1>Station № {{ current_user.citi }}, {{ citi_str }}</h1>
 
